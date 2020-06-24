@@ -1,0 +1,115 @@
+insert data: insert into employee(id,fname,lname,startdate,enddate,city) values('03','Kuman','Kothiya','19920923','19991202','Pune');
+
+select: select id,fname from employee where id<3 and startdate <'20030912';
+
+select-order by: select id,fname,lname from employee order by lname; --- ascending order of lname;
+
+select-alias: select fname as Firstname from employee;
+
+update: update employee set salary=2000 where id=2;
+
+group by-aggregate function: select avg(salary),sum(salary),fname,lname from employee group by lname; 
+
+like: select fname,lname from employee where fname like '%i';--- fname whose last character is 'i'.
+
+where: select * from employee where salary>15000;
+
+concate: select concat(lname , fname) as FullName from employee;------mysql
+** select ename ||', '||init as full_name from   employees; ------oracle
+
+constant-select fname,lname,salary,12 as Month,(salary*12) as salary_Year from employee;
+
+Math--SELECT 2 + 3 * 4   AS "2+3*4",(2 + 3) * 4 AS "(2+3)*4",6 / 2 * 3   AS "6/2*3",6/ (2 * 3) AS "6/(2*3)" from dual;
+
+select fname,lname from employee where city='Ahmedabad' or salary=20000 or enddate='1999-12-02';
+
+select * from employee where salary<15000 order by salary;
+
+select fname,lname,avg(salary),city from employee where salary<=24000 group by city;
+
+In--select fname from employee where id in(select id from employee where city='Ahmedabad');----list of ids.
+
+count--select e.* from employee e where (select count(*) from employee x where x.salary>e.salary)=2; third largest salary.
+
+order by--select * from employee order by 4 asc,3 desc;-----ascending according to column no.4. if more than 1 r same in column 4 then descending to column no. 3.
+
+-----------------------------------------------joins-------------------------------------------------------
+inner-on(ansi):  select e.emp_name,d.dept_name from departments d join employees e on d.dept_id=e.dept_id
+where d.dept_id>=30 order by e.emp_name;--(join and database in from clause, filter in where clause--common data of both table)
+
+inner-on(non-ansi): select e.emp_name,d.dept_name from departments d,employees e where d.dept_id=e.dept_id
+and  d.dept_id>=30 order by e.emp_name;--(database in from clause and join and filter in where clause).
+
+left-outer(ansi): select e.emp_name,d.dept_name from departments d left join employees e on d.dept_id=e.dept_id
+where d.dept_id>=30;--(all the data of left side table(departments) and matching data of right side according to condition)
+
+left-outer(non-ansi): select e.emp_name,d.dept_name from departments d,employees e  where  d.dept_id=e.dept_id(+)
+and d.dept_id>=30;--("(+)" is used to indicate the side of the join condition that may be missing.)
+
+right-outer(ansi): select e.emp_name,d.dept_name from departments d right join employees e on d.dept_id=e.dept_id
+where d.dept_id>=30;--(all the data of right side table(employees) and matching data of left side according to condition)
+
+right-outer(non-ansi): select e.emp_name,d.dept_name from departments d,employees e  where  d.dept_id(+)=e.dept_id
+and d.dept_id>=30;--("(+)" is used to indicate the side of the join condition that may be missing.)
+
+
+full-outer: select e.emp_name,d.dept_name from employees e full join departments d on  d.dept_id=e.dept_id 
+order by e.emp_name;(all the data of both table--)
+
+cross-join(ansi): select e.emp_name,d.dept_name from employees e cross join departments d 
+order by e.emp_name;--(cartesian-product each column of 1 table to all column of 2 table)
+
+cross-join(non-ansi): select e.emp_name,d.dept_name from employees e,departments d order by e.emp_name;
+
+natural-join(ansi): select e.emp_name,d.dept_name from employees e natural join departments d order by e.emp_name;--(natural output.)
+
+inner-using(ansi): select e.emp_name,d.dept_name from employees e  join departments d using (dept_id)order by e.emp_name;
+(The join is made using columns with matching names(dept_id for both) in each table, but you have to specify the columns to be used, not the whole condition)
+
+
+_________________________________________________________________________________________________________
+insert: insert into employees2(emp_id,emp_name,job,salary,dept_id)
+(select emp_id,emp_name,job,salary,dept_id from employees);
+
+insert: insert into employees2(select * from employees);
+
+insert: insert into employees2(emp_id,emp_name,job,dept_id,salary)values
+(8888,'AVANI','MANAGER',20,(select max(salary) from employees));--max salary apply.
+
+__________________________________________________________________________________________
+group by- having: SELECT d.dept_name,e.job,
+       COUNT(e.dept_id) AS employee_count,
+       AVG(e.salary) AS avg_salary,
+       SUM(e.salary) AS sum_salary
+FROM   departments d
+       left JOIN employees e ON d.dept_id = e.dept_id
+GROUP BY d.dept_name,e.job
+having e.job='MANAGER';
+________________________________________________________________________________
+update: update employees set salary=salary+1;
+
+update: UPDATE employees SET    salary = salary - 1 WHERE  salary >= 2000;
+
+update: UPDATE (SELECT  salary FROM   employees WHERE  dept_id = 20)
+SET    salary = 4000;
+
+update: UPDATE employees SET    salary = (SELECT MAX(salary) FROM employees)
+WHERE  emp_id = 7369;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
